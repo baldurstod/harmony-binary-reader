@@ -1,0 +1,7 @@
+{
+	"name": "harmony-binary-reader",
+	"version": "0.0.1",
+	"description": "Binary reader for javascript",
+	"main": "src/binaryreader.js",
+	"type": "module"
+}
