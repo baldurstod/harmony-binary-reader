@@ -20,9 +20,9 @@ export class BinaryReader {
 	#initDataview(buffer, byteOffset, byteLength) {
 		if (buffer instanceof BinaryReader) {
 			this._dataView = new DataView(buffer.buffer, byteOffset ? byteOffset + buffer._dataView.byteOffset : buffer._dataView.byteOffset, byteLength);
-		} else if (buffer instanceof Uint8Array) {
+		} else if (buffer instanceof Uint8Array || buffer?.constructor?.name === 'Uint8Array') {
 			this._dataView = new DataView(buffer.buffer, byteOffset ? byteOffset + buffer.byteOffset : buffer.byteOffset, byteLength);
-		} else if (buffer instanceof ArrayBuffer) {
+		} else if (buffer instanceof ArrayBuffer || buffer?.constructor?.name === 'ArrayBuffer') {
 			this._dataView = new DataView(buffer, byteOffset, byteLength);
 		} else if (typeof buffer === 'string') {
 			this._dataView = new DataView(getCharCodes(buffer).buffer, byteOffset, byteLength);
