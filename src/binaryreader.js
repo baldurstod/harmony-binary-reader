@@ -58,7 +58,7 @@ export class BinaryReader {
 	getString(byteLength, byteOffset = this.byteOffset) {
 		let string = '';
 		let readBuffer = new Uint8Array(this.buffer, byteOffset + this._dataView.byteOffset, byteLength);
-			// /_checkBounds
+		// /_checkBounds
 		this.byteOffset = byteOffset + byteLength;
 		for (var i = 0; i < byteLength; i++) {
 			string += String.fromCharCode(readBuffer[i]);
@@ -78,7 +78,7 @@ export class BinaryReader {
 			} else {
 				string += c;
 			}
-		} while(c != '\0');
+		} while (c != '\0');
 		return string;
 	}
 
@@ -130,13 +130,13 @@ export class BinaryReader {
 		let exponent = ((b[1] & 0x7C) >> 2);
 		let mantissa = ((b[1] & 0x03) << 8) | b[0];
 
-		if(exponent == 0) {
+		if (exponent == 0) {
 			return (sign ? -1 : 1) * TWO_POW_MINUS_14 * (mantissa / TWO_POW_10);
 		} else if (exponent == 0x1F) {
 			return mantissa ? NaN : ((sign ? -1 : 1) * Infinity);
 		}
 
-		return (sign?-1:1) * Math.pow(2, exponent-15) * (1+(mantissa/TWO_POW_10));
+		return (sign ? -1 : 1) * Math.pow(2, exponent - 15) * (1 + (mantissa / TWO_POW_10));
 	}
 
 	getInt32(byteOffset = this.byteOffset, littleEndian = this.littleEndian) {
@@ -231,7 +231,7 @@ export class BinaryReader {
 	}
 
 	setInt8(value, byteOffset = this.byteOffset, littleEndian = this.littleEndian) {
-		this.byteOffset = byteOffset +1;
+		this.byteOffset = byteOffset + 1;
 		return this._dataView.setInt8(byteOffset, value, littleEndian);
 	}
 
@@ -246,7 +246,7 @@ export class BinaryReader {
 	}
 
 	setUint8(value, byteOffset = this.byteOffset, littleEndian = this.littleEndian) {
-		this.byteOffset = byteOffset +1;
+		this.byteOffset = byteOffset + 1;
 		return this._dataView.setUint8(byteOffset, value, littleEndian);
 	}
 
@@ -265,28 +265,4 @@ export class BinaryReader {
 		this.byteOffset = byteOffset + length;
 		new Uint8Array(this._dataView.buffer, byteOffset + this._dataView.byteOffset, length).set(bytes);
 	}
-/*
-	_setBytes(byteOffset = this.byteOffset, bytes) {
-		let length = bytes.length;
-
-		//this._checkBounds(byteOffset, length);
-
-		byteOffset += this.byteOffset;
-
-		if (this._isArrayBuffer) {
-			new Uint8Array(this.buffer, byteOffset, length).set(bytes);
-		}
-		else {
-			if (this._isNodeBuffer) {
-				// workaround for Node.js v0.11.6 (`new Buffer(bufferInstance)` call corrupts original data)
-				(bytes instanceof Buffer ? bytes : new Buffer(bytes)).copy(this.buffer, byteOffset);
-			} else {
-				for (var i = 0; i < length; i++) {
-					this.buffer[byteOffset + i] = bytes[i];
-				}
-			}
-		}
-
-		this._offset = byteOffset - this.byteOffset + length;
-	}*/
 }
