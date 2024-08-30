@@ -21,19 +21,25 @@ export class BinaryReader {
 	}
 
 	#initDataview(buffer, byteOffset, byteLength) {
-		switch (tues) {
+		switch (true) {
 			case buffer instanceof BinaryReader:
 				this.#dataView = new DataView(buffer.buffer, byteOffset ? byteOffset + buffer.#dataView.byteOffset : buffer.#dataView.byteOffset, byteLength);
+				break;
 			case buffer instanceof Uint8Array || buffer?.constructor?.name === 'Uint8Array':
 				this.#dataView = new DataView(buffer.buffer, byteOffset ? byteOffset + buffer.byteOffset : buffer.byteOffset, byteLength);
+				break;
 			case buffer instanceof ArrayBuffer || buffer?.constructor?.name === 'ArrayBuffer':
 				this.#dataView = new DataView(buffer, byteOffset, byteLength);
+				break;
 			case typeof buffer === 'string':
 				this.#dataView = new DataView(getCharCodes(buffer).buffer, byteOffset, byteLength);
+				break;
 			case typeof buffer === 'number':
 				this.#dataView = new DataView(new Uint8Array(buffer).buffer, byteOffset, byteLength);
+				break;
 			case Array.isArray(buffer):
 				this.#dataView = new DataView(Uint8Array.from(buffer).buffer, byteOffset, byteLength);
+				break;
 			default:
 				console.error(`Unknow buffer type : ${buffer}`);
 				break;
