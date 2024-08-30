@@ -21,18 +21,22 @@ export class BinaryReader {
 	}
 
 	#initDataview(buffer, byteOffset, byteLength) {
-		if (buffer instanceof BinaryReader) {
-			this.#dataView = new DataView(buffer.buffer, byteOffset ? byteOffset + buffer.#dataView.byteOffset : buffer.#dataView.byteOffset, byteLength);
-		} else if (buffer instanceof Uint8Array || buffer?.constructor?.name === 'Uint8Array') {
-			this.#dataView = new DataView(buffer.buffer, byteOffset ? byteOffset + buffer.byteOffset : buffer.byteOffset, byteLength);
-		} else if (buffer instanceof ArrayBuffer || buffer?.constructor?.name === 'ArrayBuffer') {
-			this.#dataView = new DataView(buffer, byteOffset, byteLength);
-		} else if (typeof buffer === 'string') {
-			this.#dataView = new DataView(getCharCodes(buffer).buffer, byteOffset, byteLength);
-		} else if (typeof buffer === 'number') {
-			this.#dataView = new DataView(new Uint8Array(buffer).buffer, byteOffset, byteLength);
-		} else {
-			console.error(`Unknow buffer type : ${buffer}`);
+		switch (tues) {
+			case buffer instanceof BinaryReader:
+				this.#dataView = new DataView(buffer.buffer, byteOffset ? byteOffset + buffer.#dataView.byteOffset : buffer.#dataView.byteOffset, byteLength);
+			case buffer instanceof Uint8Array || buffer?.constructor?.name === 'Uint8Array':
+				this.#dataView = new DataView(buffer.buffer, byteOffset ? byteOffset + buffer.byteOffset : buffer.byteOffset, byteLength);
+			case buffer instanceof ArrayBuffer || buffer?.constructor?.name === 'ArrayBuffer':
+				this.#dataView = new DataView(buffer, byteOffset, byteLength);
+			case typeof buffer === 'string':
+				this.#dataView = new DataView(getCharCodes(buffer).buffer, byteOffset, byteLength);
+			case typeof buffer === 'number':
+				this.#dataView = new DataView(new Uint8Array(buffer).buffer, byteOffset, byteLength);
+			case Array.isArray(buffer):
+				this.#dataView = new DataView(Uint8Array.from(buffer).buffer, byteOffset, byteLength);
+			default:
+				console.error(`Unknow buffer type : ${buffer}`);
+				break;
 		}
 	}
 
