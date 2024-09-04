@@ -54,6 +54,10 @@ export class BinaryReader {
 		return this.#dataView.byteLength;
 	}
 
+	getDataView() {
+		return this.#dataView;
+	}
+
 	tell() {
 		return this.#byteOffset;
 	}
