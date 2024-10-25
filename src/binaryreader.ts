@@ -16,12 +16,12 @@ export class BinaryReader {
 	#dataView: DataView = new DataView(new ArrayBuffer(0));
 	#byteOffset = 0;
 	#littleEndian;
-	constructor(buffer: BinaryReaderBuffer, byteOffset: number, byteLength: number, littleEndian = true) {
+	constructor(buffer: BinaryReaderBuffer, byteOffset: number | undefined, byteLength: number | undefined, littleEndian = true) {
 		this.#littleEndian = littleEndian;
 		this.#initDataview(buffer, byteOffset, byteLength);
 	}
 
-	#initDataview(buffer: BinaryReaderBuffer, byteOffset: number, byteLength: number) {
+	#initDataview(buffer: BinaryReaderBuffer, byteOffset: number | undefined, byteLength: number | undefined) {
 		switch (true) {
 			case buffer instanceof BinaryReader:
 				this.#dataView = new DataView(buffer.buffer, byteOffset ? byteOffset + buffer.#dataView.byteOffset : buffer.#dataView.byteOffset, byteLength);

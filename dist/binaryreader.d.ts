@@ -4,7 +4,7 @@ export declare function getCharCodes(str: string): Uint8Array;
 type BinaryReaderBuffer = BinaryReader | Uint8Array | ArrayBuffer | string | number | ArrayLike<number>;
 export declare class BinaryReader {
     #private;
-    constructor(buffer: BinaryReaderBuffer, byteOffset: number, byteLength: number, littleEndian?: boolean);
+    constructor(buffer: BinaryReaderBuffer, byteOffset: number | undefined, byteLength: number | undefined, littleEndian?: boolean);
     get buffer(): ArrayBuffer;
     get byteLength(): number;
     getDataView(): DataView;
