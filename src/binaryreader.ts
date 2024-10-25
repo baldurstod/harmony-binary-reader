@@ -16,7 +16,7 @@ export class BinaryReader {
 	#dataView: DataView = new DataView(new ArrayBuffer(0));
 	#byteOffset = 0;
 	#littleEndian;
-	constructor(buffer: BinaryReaderBuffer, byteOffset: number | undefined, byteLength: number | undefined, littleEndian = true) {
+	constructor(buffer: BinaryReaderBuffer, byteOffset?: number | undefined, byteLength?: number | undefined, littleEndian = true) {
 		this.#littleEndian = littleEndian;
 		this.#initDataview(buffer, byteOffset, byteLength);
 	}
