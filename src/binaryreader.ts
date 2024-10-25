@@ -1,35 +1,36 @@
 export const TWO_POW_10 = 1024;
 export const TWO_POW_MINUS_14 = Math.pow(2, -14);
 
-export function getCharCodes(string) {
-	let codes = new Uint8Array(string.length);
+export function getCharCodes(str: string) {
+	let codes = new Uint8Array(str.length);
 
-	for (var i = 0, length = string.length; i < length; i++) {
-		codes[i] = string.charCodeAt(i) & 0xff;
+	for (var i = 0, length = str.length; i < length; i++) {
+		codes[i] = str.charCodeAt(i) & 0xff;
 	}
 	return codes;
 }
 
+type BinaryReaderBuffer = BinaryReader | Uint8Array | ArrayBuffer | string | number | ArrayLike<number>;
+
 export class BinaryReader {
-	#dataView;
+	#dataView: DataView = new DataView(new ArrayBuffer(0));
 	#byteOffset = 0;
 	#littleEndian;
-	constructor(buffer, byteOffset, byteLength, littleEndian = true) {
-		this.#byteOffset = 0;
+	constructor(buffer: BinaryReaderBuffer, byteOffset: number, byteLength: number, littleEndian = true) {
 		this.#littleEndian = littleEndian;
 		this.#initDataview(buffer, byteOffset, byteLength);
 	}
 
-	#initDataview(buffer, byteOffset, byteLength) {
+	#initDataview(buffer: BinaryReaderBuffer, byteOffset: number, byteLength: number) {
 		switch (true) {
 			case buffer instanceof BinaryReader:
 				this.#dataView = new DataView(buffer.buffer, byteOffset ? byteOffset + buffer.#dataView.byteOffset : buffer.#dataView.byteOffset, byteLength);
 				break;
 			case buffer instanceof Uint8Array || buffer?.constructor?.name === 'Uint8Array':
-				this.#dataView = new DataView(buffer.buffer, byteOffset ? byteOffset + buffer.byteOffset : buffer.byteOffset, byteLength);
+				this.#dataView = new DataView((buffer as Uint8Array).buffer, byteOffset ? byteOffset + (buffer as Uint8Array).byteOffset : (buffer as Uint8Array).byteOffset, byteLength);
 				break;
 			case buffer instanceof ArrayBuffer || buffer?.constructor?.name === 'ArrayBuffer':
-				this.#dataView = new DataView(buffer, byteOffset, byteLength);
+				this.#dataView = new DataView((buffer as ArrayBuffer), byteOffset, byteLength);
 				break;
 			case typeof buffer === 'string':
 				this.#dataView = new DataView(getCharCodes(buffer).buffer, byteOffset, byteLength);
@@ -72,7 +73,7 @@ export class BinaryReader {
 		this.#byteOffset += byteLength;
 	}
 
-	getString(byteLength, byteOffset = this.#byteOffset) {
+	getString(byteLength: number, byteOffset = this.#byteOffset) {
 		let string = '';
 		let readBuffer = new Uint8Array(this.buffer, byteOffset + this.#dataView.byteOffset, byteLength);
 		// /_checkBounds
@@ -99,18 +100,18 @@ export class BinaryReader {
 		return string;
 	}
 
-	setString(string, byteOffset = this.#byteOffset) {
-		let length = string.length;
+	setString(str: string, byteOffset = this.#byteOffset) {
+		let length = str.length;
 		this.#byteOffset = byteOffset + length;
 		let writeBuffer = new Uint8Array(this.buffer, byteOffset + this.#dataView.byteOffset, length);
 		//TODO: check len
 
 		for (var i = 0, l = length; i < l; i++) {
-			writeBuffer[i] = string.charCodeAt(i) & 0xff;
+			writeBuffer[i] = str.charCodeAt(i) & 0xff;
 		}
 	}
 
-	getBytes(byteLength, byteOffset = this.#byteOffset) {
+	getBytes(byteLength: number, byteOffset = this.#byteOffset) {
 		let readBuffer = new Uint8Array(this.buffer, byteOffset + this.#dataView.byteOffset, byteLength);
 		this.#byteOffset = byteOffset + byteLength;
 		return readBuffer;
@@ -227,57 +228,57 @@ export class BinaryReader {
 		return vec;
 	}
 
-	setBigInt64(value, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
+	setBigInt64(value: bigint, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
 		this.#byteOffset = byteOffset + 8;
 		return this.#dataView.setBigInt64(byteOffset, value, littleEndian);
 	}
 
-	setBigUint64(value, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
+	setBigUint64(value: bigint, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
 		this.#byteOffset = byteOffset + 8;
 		return this.#dataView.setBigUint64(byteOffset, value, littleEndian);
 	}
 
-	setFloat32(value, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
+	setFloat32(value: number, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
 		this.#byteOffset = byteOffset + 4;
 		return this.#dataView.setFloat32(byteOffset, value, littleEndian);
 	}
 
-	setFloat64(value, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
+	setFloat64(value: number, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
 		this.#byteOffset = byteOffset + 8;
 		return this.#dataView.setFloat64(byteOffset, value, littleEndian);
 	}
 
-	setInt8(value, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
+	setInt8(value: number, byteOffset = this.#byteOffset) {
 		this.#byteOffset = byteOffset + 1;
-		return this.#dataView.setInt8(byteOffset, value, littleEndian);
+		return this.#dataView.setInt8(byteOffset, value);
 	}
 
-	setInt16(value, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
+	setInt16(value: number, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
 		this.#byteOffset = byteOffset + 2;
 		return this.#dataView.setInt16(byteOffset, value, littleEndian);
 	}
 
-	setInt32(value, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
+	setInt32(value: number, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
 		this.#byteOffset = byteOffset + 4;
 		return this.#dataView.setInt32(byteOffset, value, littleEndian);
 	}
 
-	setUint8(value, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
+	setUint8(value: number, byteOffset = this.#byteOffset) {
 		this.#byteOffset = byteOffset + 1;
-		return this.#dataView.setUint8(byteOffset, value, littleEndian);
+		return this.#dataView.setUint8(byteOffset, value);
 	}
 
-	setUint16(value, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
+	setUint16(value: number, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
 		this.#byteOffset = byteOffset + 2;
 		return this.#dataView.setUint16(byteOffset, value, littleEndian);
 	}
 
-	setUint32(value, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
+	setUint32(value: number, byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
 		this.#byteOffset = byteOffset + 4;
 		return this.#dataView.setUint32(byteOffset, value, littleEndian);
 	}
 
-	setBytes(bytes, byteOffset = this.#byteOffset) {
+	setBytes(bytes: ArrayLike<number>, byteOffset = this.#byteOffset) {
 		let length = bytes.length;
 		this.#byteOffset = byteOffset + length;
 		new Uint8Array(this.#dataView.buffer, byteOffset + this.#dataView.byteOffset, length).set(bytes);
