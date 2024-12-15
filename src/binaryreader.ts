@@ -187,23 +187,20 @@ export class BinaryReader {
 		return this.#dataView.getFloat64(byteOffset, littleEndian);
 	}
 
-	getVector2(byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
-		let vec = new Float32Array(2);
+	getVector2(byteOffset = this.#byteOffset, littleEndian = this.#littleEndian, vec = new Float32Array(2)) {
 		vec[0] = this.getFloat32(byteOffset, littleEndian);
 		vec[1] = this.getFloat32(undefined, littleEndian);
 		return vec;
 	}
 
-	getVector3(byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
-		let vec = new Float32Array(3);
+	getVector3(byteOffset = this.#byteOffset, littleEndian = this.#littleEndian, vec = new Float32Array(3)) {
 		vec[0] = this.getFloat32(byteOffset, littleEndian);
 		vec[1] = this.getFloat32(undefined, littleEndian);
 		vec[2] = this.getFloat32(undefined, littleEndian);
 		return vec;
 	}
 
-	getVector4(byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
-		let vec = new Float32Array(4);
+	getVector4(byteOffset = this.#byteOffset, littleEndian = this.#littleEndian, vec = new Float32Array(4)) {
 		vec[0] = this.getFloat32(byteOffset, littleEndian);
 		vec[1] = this.getFloat32(undefined, littleEndian);
 		vec[2] = this.getFloat32(undefined, littleEndian);
@@ -211,16 +208,14 @@ export class BinaryReader {
 		return vec;
 	}
 
-	getVector48(byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
-		let vec = new Float32Array(3);
+	getVector48(byteOffset = this.#byteOffset, littleEndian = this.#littleEndian, vec = new Float32Array(3)) {
 		vec[0] = this.getFloat16(byteOffset, littleEndian);
 		vec[1] = this.getFloat16(undefined, littleEndian);
 		vec[2] = this.getFloat16(undefined, littleEndian);
 		return vec;
 	}
 
-	getQuaternion(byteOffset = this.#byteOffset, littleEndian = this.#littleEndian) {
-		let vec = new Float32Array(4);
+	getQuaternion(byteOffset = this.#byteOffset, littleEndian = this.#littleEndian, vec = new Float32Array(4)) {
 		vec[0] = this.getFloat32(byteOffset, littleEndian);
 		vec[1] = this.getFloat32(undefined, littleEndian);
 		vec[2] = this.getFloat32(undefined, littleEndian);

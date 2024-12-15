@@ -1,6 +1,6 @@
 {
 	"name": "harmony-binary-reader",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "Binary reader for javascript",
 	"main": "dist/binaryreader.js",
 	"types": "dist/binaryreader.d.ts",
